@@ -30,3 +30,4 @@ public class FileType extends HttpServlet{
 
 
 }
+ 
