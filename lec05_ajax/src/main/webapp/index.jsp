@@ -9,5 +9,7 @@
 <body>
 	<h1>JavaScript</h1>
 	<a href="/jsAjaxPage">연습 화면 이동</a>
+	<h1>jQuery</h1>
+	<a href="views/jQuery/sample.jsp">연습 화면 이동(jQuery)</a>
 </body>
 </html>
