@@ -7,6 +7,7 @@
 <title>회원가입 페이지</title>
 <link href="<%=request.getContextPath()%>/resources/css/member/create.css" 
 rel="stylesheet" type="text/css">
+<script src="<%=request.getContextPath()%>/resources/js/jquery-3.7.1.js"></script>
 </head>
 <body>
 	<%@ include file="../include/header.jsp"%>
@@ -50,7 +51,19 @@ rel="stylesheet" type="text/css">
 				form.member_pw_check.focus();
 				// 닉네임 유효성 검사
 			}else{
-				form.submit();
+				// form.submit();
+				$.ajax({
+					url : "/memberCreateEnd",
+					type : "post",
+					data : {"member_id":form.member_id.value,
+						"member_pw" : form.member_pw.value,
+						"member_name": form.member_name.value},
+					dataType:"JSON", 
+					contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+					success:function(data){
+						
+					}
+				});
 			}
 		}
 	</script>
