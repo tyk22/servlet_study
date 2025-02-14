@@ -30,7 +30,7 @@ rel="stylesheet" type="text/css">
 				</form>
 			</div>
 			<div class="login">
-				<a href="#">로그인</a>
+				<a href="/memberLogin">로그인</a>
 			</div>
 		</div>
 	</section>
@@ -61,7 +61,15 @@ rel="stylesheet" type="text/css">
 					dataType:"JSON", 
 					contentType: "application/x-www-form-urlencoded; charset=UTF-8",
 					success:function(data){
+						alert(data.res_msg);
 						
+						// res_msg를 alert창에 출력
+						// 만약에 res_code가 200과 같다면
+						
+						if(data.res_code==200){
+							location.href="/";
+						}
+						// / 경로로 이동 (location)
 					}
 				});
 			}
