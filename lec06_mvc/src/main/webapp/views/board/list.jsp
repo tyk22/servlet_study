@@ -4,6 +4,7 @@
 <%@ page import="java.util.List" %>
 <% List<Board> list = (List<Board>)request.getAttribute("resultList"); %>
 <%@ page import="com.gn.board.vo.Board, java.util.*, java.time.format.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html> 
 <head>
@@ -46,15 +47,25 @@
 						</tr>
 					</thead>
 					<tbody>
-						<%for(int i=0;i<list.size();i++){
-						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm");%>
-						<tr data-board-no="<%=list.get(i).getBoardNo()%>">
+						<%-- <%for(int i=0;i<list.size();i++){ --%>
+						<%DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm");%>
+						
+						<c:forEach var="b" items="${resultList }" varStatus="vs">
+						<%-- <tr data-board-no="<%=list.get(i).getBoardNo()%>">
 							<td><%=((paging.getNowPage()-1)*paging.getNumPerPage())+(i+1)%></td>
 							<td><%=list.get(i).getBoardTitle() %></td>
 							<td><%=list.get(i).getMemberName() %></td>
 							<td><%=list.get(i).getRegDate().format(dtf) %></td>		
+						</tr> --%>
+						<tr data-board-no="${b.boardNo}">
+							<td>${((paging.nowPage-1)*paging.numPerPage)+(vs.index+1)}</td>
+							<td>${b.boardTitle}</td>
+							<td>${b.memberName}</td>
+							<td>${b.regDate}</td>
 						</tr>
-						<%} %>
+						</c:forEach>
+						
+						<%-- <%} %> --%>
 					</tbody>
 				</table>
 			</div>
@@ -66,10 +77,26 @@
 				<%if(paging.isPrev()){ %>
 					<a href="/boardList?nowPage=<%=(paging.getPageBarStart()-1)%>&board_title=<%=paging.getBoardTitle()%>">&laquo;</a>
 				<%} %>
-				<% for(int i = paging.getPageBarStart(); i <= paging.getPageBarEnd(); i++){%>
+				
+				
+				<c:set var="pbt" value="${paging.boardTitle}"/>
+				
+				<c:choose>
+					<c:when test="${empty pbt }">
+						<c:set var="pbt" value=""/>
+					</c:when>
+				</c:choose>
+				<c:forEach var="i" begin="${paging.pageBarStart }" end="${paging.pageBarEnd }" varStatus="vs">
+				<%-- <% for(int i = paging.getPageBarStart(); i <= paging.getPageBarEnd(); i++){%>
 					<a href="/boardList?nowPage=<%=i%>&board_title=<%=paging.getBoardTitle() == null?"":paging.getBoardTitle()%>">
 					<%=i %></a>
-				<%} %>
+				<%} %> --%>
+					<%-- <a href="/boardList?nowPage=${i}&board_title=${empty paging.boardTitle ? '' : paging.boardTitle}"> --%>
+					<a href="/boardList?nowPage=${i}&board_title=${pbt}">
+					${vs.index}</a>
+				</c:forEach>
+				
+				
 				<% if(paging.isNext()){ %>
 					<a href="/boardList?nowPage=<%=(paging.getPageBarEnd()+1) %>">&raquo;</a>
 				<%} %>

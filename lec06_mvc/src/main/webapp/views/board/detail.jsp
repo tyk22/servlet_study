@@ -20,24 +20,27 @@
 			<div class="board_detail">
 				<ul>
 					<li>
-						<img src="C:\\upload\\board\\<%=board.getNewName()%>">
+						<img src="<%=request.getContextPath()%>/filePath?attach_no=<%=board.getAttachNo()%>">
 						<br>
-						<span></span>
+						<a href="<%=request.getContextPath()%>/fileDownload?attach_no=<%=board.getAttachNo()%>">파일 다운로드 </a>
 					</li>
 					<li>
 						<table>
 							<tr>
 								<td>제목</td>
 								<%DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm"); %>
-								<td><%=board.getBoardTitle() %></td>
+								<%-- <td><%=board.getBoardTitle() %></td> --%>
+								<td>${board.boardTitle}</td>
 							</tr>
 							<tr>
 								<td>내용</td>
-								<td><%=board.getBoardContent() %></td>
+								<%-- <td><%=board.getBoardContent() %></td> --%>
+								<td>${board.boardContent}</td>
 							</tr>
 							<tr>
 								<td>작성자</td>
-								<td><%=board.getMemberName() %></td>
+								<%-- <td><%=board.getMemberName() %></td> --%>
+								<td>${board.memberName}</td>
 							</tr>
 							<tr>
 								<td>등록일</td>
