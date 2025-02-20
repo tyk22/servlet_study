@@ -5,6 +5,8 @@
 <% List<Board> list = (List<Board>)request.getAttribute("resultList"); %>
 <%@ page import="com.gn.board.vo.Board, java.util.*, java.time.format.*" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html> 
 <head>
@@ -12,7 +14,8 @@
 <title>게시판</title>
 <link href='<%=request.getContextPath()%>/resources/css/board/list.css' rel="stylesheet" type="text/css">
 <link href="<%=request.getContextPath()%>/resources/css/include/paging.css" rel="stylesheet" type="text/css">
-<script src="<%=request.getContextPath()%>/resources/js/jquery-3.7.1.js"></script>
+<%-- <script src="<%=request.getContextPath()%>/resources/js/jquery-3.7.1.js"></script> --%>
+<script src="<c:url value='/resources/js/jquery-3.7.1.js'/>"></script>
 </head>
 <body>
 	<%@ include file="/views/include/header.jsp" %>
@@ -49,21 +52,41 @@
 					<tbody>
 						<%-- <%for(int i=0;i<list.size();i++){ --%>
 						<%DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm");%>
-						
-						<c:forEach var="b" items="${resultList }" varStatus="vs">
-						<%-- <tr data-board-no="<%=list.get(i).getBoardNo()%>">
+						<c:choose>
+						<c:when test="${not empty resultList }">
+							<c:forEach var="b" items="${resultList }" varStatus="vs">
+								<tr data-board-no="${b.boardNo}">
+									<td>${((paging.nowPage-1)*paging.numPerPage)+(vs.index+1)}</td>
+									<td>${b.boardTitle}</td>
+									<td>${b.memberName}</td>
+									<%-- <td>${b.regDate}</td> --%>
+									<fmt:parseDate value="${b.regDate}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="strRegDate"/>
+									<td>
+										<fmt:formatDate value="${strRegDate }" pattern="yy-MM-dd HH:mm"/>
+									</td>
+								</tr>
+							</c:forEach>
+						</c:when>
+						<c:otherwise>
+							<tr>
+								<td colspan="4">조회된 데이터가 없습니다.</td>
+							</tr>
+						</c:otherwise>
+						</c:choose>
+						<%-- <c:forEach var="b" items="${resultList }" varStatus="vs">
+						<tr data-board-no="<%=list.get(i).getBoardNo()%>">
 							<td><%=((paging.getNowPage()-1)*paging.getNumPerPage())+(i+1)%></td>
 							<td><%=list.get(i).getBoardTitle() %></td>
 							<td><%=list.get(i).getMemberName() %></td>
 							<td><%=list.get(i).getRegDate().format(dtf) %></td>		
-						</tr> --%>
+						</tr>
 						<tr data-board-no="${b.boardNo}">
 							<td>${((paging.nowPage-1)*paging.numPerPage)+(vs.index+1)}</td>
 							<td>${b.boardTitle}</td>
 							<td>${b.memberName}</td>
 							<td>${b.regDate}</td>
 						</tr>
-						</c:forEach>
+						</c:forEach> --%>
 						
 						<%-- <%} %> --%>
 					</tbody>
@@ -74,10 +97,14 @@
 	<% if(paging != null){ %>
 		<div class="center">
 			<div class="pagination">
-				<%if(paging.isPrev()){ %>
-					<a href="/boardList?nowPage=<%=(paging.getPageBarStart()-1)%>&board_title=<%=paging.getBoardTitle()%>">&laquo;</a>
-				<%} %>
-				
+			
+				<c:if test="${paging.prev }">
+					<c:url var="testUrl" value="/boardList">
+						<c:param name="nowPage" value="${paging.pageBarStart()-1}"/>
+						<c:param name="board_title" value="${paging.boardTitle()-1}"/>
+					</c:url>
+					<a href="${testUrl }">&laquo;</a>
+				</c:if>
 				
 				<c:set var="pbt" value="${paging.boardTitle}"/>
 				
@@ -97,9 +124,14 @@
 				</c:forEach>
 				
 				
-				<% if(paging.isNext()){ %>
+				<%-- <% if(paging.isNext()){ %>
 					<a href="/boardList?nowPage=<%=(paging.getPageBarEnd()+1) %>">&raquo;</a>
-				<%} %>
+				<%} %> --%>
+				<c:if test="${paging.next }">
+					<a href="/boardList?nowPage=${paging.pageBarEnd+1 }&board_title=${paging.boardTitle}">
+						&raquo;
+					</a>
+				</c:if>
 			</div>
 		</div>
 	<%} %>
